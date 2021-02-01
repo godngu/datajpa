@@ -1,14 +1,11 @@
 package study.datajpa.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
@@ -202,5 +198,22 @@ class MemberRepositoryTest {
         assertThat(member5.getAge()).isEqualTo(41);
 
         assertThat(resultCount).isEqualTo(3);
+    }
+
+    @Test
+    void queryHint() {
+        Member member = new Member("member1", 10);
+        memberRepository.save(member);
+        em.flush();
+        em.clear();
+
+        Member findMember = memberRepository.findReadOnlyById(member.getId());
+        findMember.setUsername("AAA");
+
+        Member findMember2 = memberRepository.findById(member.getId()).get();
+        assertThat(findMember).isEqualTo(findMember2);
+
+        System.out.println("member = " + member);
+        System.out.println("findMember = " + findMember);
     }
 }
