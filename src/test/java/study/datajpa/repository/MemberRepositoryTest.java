@@ -216,4 +216,9 @@ class MemberRepositoryTest {
         System.out.println("member = " + member);
         System.out.println("findMember = " + findMember);
     }
+
+    @Test
+    void name() {
+        memberRepository.findMemberCustom();
+    }
 }
